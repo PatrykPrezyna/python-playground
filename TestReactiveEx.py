@@ -1,15 +1,16 @@
-from reactivex import create
+from reactivex import create, of, operators
 
 
-def function(a, b):
-    a.on_next("Patryk")
-    a.on_next("Christian")
-    a.on_error("Helmut")
-    a.on_completed()
+def fun(observer, scheduler):
+    observer.on_next("ein")
+    observer.on_next("zwei")
+    observer.on_next("drei")
 
 
-source = create(function)
+source = of("fun", "fun2", "fun21", "fun222")
 
-source.subscribe(
-    on_next=lambda i: print("Hi {0}".format(i)), on_completed=print("Goodbye")
+composed = source.pipe(
+    operators.map(lambda i: len(i)), operators.filter(lambda j: j > 4)
 )
+
+composed.subscribe(on_next=lambda a: print("{0}".format(a)))
